@@ -32,4 +32,9 @@ class PipelineStack(core.Stack):
         install_command='npm install -g aws-cdk && pip install -r requirements.txt',
         build_command='pytest unittests',
         synth_command='cdk synth'))
+        
+    pre_prod_app = WebServiceStage(self, 'Pre-Prod', env={
+      'account': APP_ACCOUNT,
+      'region': 'us-west-2',
+    })
 
