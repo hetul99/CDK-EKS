@@ -29,7 +29,7 @@ class PipelineStack(core.Stack):
       synth_action=pipelines.SimpleSynthAction(
         source_artifact=source_artifact,
         cloud_assembly_artifact=cloud_assembly_artifact,
-        install_command='npm install -g aws-cdk && pip install -r requirements.txt && python -m pip install aws_cdk.pipelines aws_cdk.aws_codebuild && python -m pip install aws_cdk.aws_codepipeline aws_cdk.aws_codepipeline_actions',
+        install_command='npm install -g aws-cdk && pip install -r requirements.txt',
         #build_command='pytest unittests',
         synth_command='cdk synth'))
         
