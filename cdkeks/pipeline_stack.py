@@ -33,7 +33,3 @@ class PipelineStack(core.Stack):
         build_command='pytest unittests',
         synth_command='cdk synth'))
 
-    pre_prod_app = WebServiceStage(self, 'Pre-Prod', env={
-      'account': APP_ACCOUNT,
-      'region': 'us-west-2',
-    })
