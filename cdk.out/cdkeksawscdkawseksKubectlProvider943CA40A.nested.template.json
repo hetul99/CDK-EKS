@@ -1,0 +1,684 @@
+{
+  "Resources": {
+    "HandlerServiceRoleFCDC14AE": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/Handler/ServiceRole/Resource"
+      }
+    },
+    "HandlerServiceRoleDefaultPolicyCBD0CC91": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "eks:DescribeCluster",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "referencetocdkekscluster493FF92EArn"
+              }
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "referencetocdkeksclusterCreationRoleC3460E30Arn"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "HandlerServiceRoleDefaultPolicyCBD0CC91",
+        "Roles": [
+          {
+            "Ref": "HandlerServiceRoleFCDC14AE"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/Handler/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "Handler886CB40B": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "referencetocdkeksAssetParametersbafd50ae9f214e496ff8c72c6425f93dca3ccd590e20963706d5d610d9c75757S3BucketF96685D4Ref"
+          },
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "referencetocdkeksAssetParametersbafd50ae9f214e496ff8c72c6425f93dca3ccd590e20963706d5d610d9c75757S3VersionKey196E33B9Ref"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "referencetocdkeksAssetParametersbafd50ae9f214e496ff8c72c6425f93dca3ccd590e20963706d5d610d9c75757S3VersionKey196E33B9Ref"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "HandlerServiceRoleFCDC14AE",
+            "Arn"
+          ]
+        },
+        "Description": "onEvent handler for EKS kubectl resource provider",
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "AwsCliLayerF44AAF94"
+          },
+          {
+            "Ref": "KubectlLayer600207B5"
+          }
+        ],
+        "MemorySize": 1024,
+        "Runtime": "python3.7",
+        "Timeout": 900,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "referencetocdkekscluster493FF92EClusterSecurityGroupId"
+            }
+          ],
+          "SubnetIds": [
+            {
+              "Ref": "referencetocdkeksVPCPrivateSubnet1SubnetC9836E8DRef"
+            },
+            {
+              "Ref": "referencetocdkeksVPCPrivateSubnet2Subnet0656E4EBRef"
+            }
+          ]
+        }
+      },
+      "DependsOn": [
+        "HandlerServiceRoleDefaultPolicyCBD0CC91",
+        "HandlerServiceRoleFCDC14AE"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/Handler/Resource",
+        "aws:asset:path": "asset.bafd50ae9f214e496ff8c72c6425f93dca3ccd590e20963706d5d610d9c75757",
+        "aws:asset:property": "Code"
+      }
+    },
+    "AwsCliLayerF44AAF94": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "Content": {
+          "S3Bucket": {
+            "Ref": "referencetocdkeksAssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3Bucket6647DF97Ref"
+          },
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "referencetocdkeksAssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKey7728A9FBRef"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "referencetocdkeksAssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKey7728A9FBRef"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "Description": "/opt/awscli/aws"
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/AwsCliLayer/Resource",
+        "aws:asset:path": "asset.e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68.zip",
+        "aws:asset:property": "Content"
+      }
+    },
+    "KubectlLayer600207B5": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "Content": {
+          "S3Bucket": {
+            "Ref": "referencetocdkeksAssetParameters092d7f04586cb1a946bd246f2ceac752f0a6c07032105e9a8ddcb3ba9fc7b621S3BucketFB548793Ref"
+          },
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "referencetocdkeksAssetParameters092d7f04586cb1a946bd246f2ceac752f0a6c07032105e9a8ddcb3ba9fc7b621S3VersionKeyCACCAA7BRef"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "referencetocdkeksAssetParameters092d7f04586cb1a946bd246f2ceac752f0a6c07032105e9a8ddcb3ba9fc7b621S3VersionKeyCACCAA7BRef"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "Description": "/opt/kubectl/kubectl and /opt/helm/helm"
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/KubectlLayer/Resource",
+        "aws:asset:path": "asset.092d7f04586cb1a946bd246f2ceac752f0a6c07032105e9a8ddcb3ba9fc7b621.zip",
+        "aws:asset:property": "Content"
+      }
+    },
+    "ProviderframeworkonEventServiceRole9FF04296": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/Provider/framework-onEvent/ServiceRole/Resource"
+      }
+    },
+    "ProviderframeworkonEventServiceRoleDefaultPolicy48CD2133": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "Handler886CB40B",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "ProviderframeworkonEventServiceRoleDefaultPolicy48CD2133",
+        "Roles": [
+          {
+            "Ref": "ProviderframeworkonEventServiceRole9FF04296"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "ProviderframeworkonEvent83C1D0A7": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "referencetocdkeksAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3Bucket26DFD404Ref"
+          },
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "referencetocdkeksAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKey40628C6CRef"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "referencetocdkeksAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKey40628C6CRef"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "ProviderframeworkonEventServiceRole9FF04296",
+            "Arn"
+          ]
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (cdkeks/@aws-cdk--aws-eks.KubectlProvider/Provider)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "Handler886CB40B",
+                "Arn"
+              ]
+            }
+          }
+        },
+        "Handler": "framework.onEvent",
+        "Runtime": "nodejs14.x",
+        "Timeout": 900,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "referencetocdkekscluster493FF92EClusterSecurityGroupId"
+            }
+          ],
+          "SubnetIds": [
+            {
+              "Ref": "referencetocdkeksVPCPrivateSubnet1SubnetC9836E8DRef"
+            },
+            {
+              "Ref": "referencetocdkeksVPCPrivateSubnet2Subnet0656E4EBRef"
+            }
+          ]
+        }
+      },
+      "DependsOn": [
+        "ProviderframeworkonEventServiceRoleDefaultPolicy48CD2133",
+        "ProviderframeworkonEventServiceRole9FF04296"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/Provider/framework-onEvent/Resource",
+        "aws:asset:path": "asset.c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c",
+        "aws:asset:property": "Code"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAA01OwU7DMAz9lt0Tj2qHwY2pEhcQqorEPUu9YZomUuxsqqL+O02KBKf3/Gy/9xpoHh6h2T2bO2s7jPtsQ0TI78iCw4cYO6oTM8pKr+SvqkcOKVpUbfAsMVlR7cX/qRe/LgYSCn5RxTQ7M50HA/kleVvkcvOfv5kZ4ydGri9kJsh9cNWqYhcc2bmMG1sUH7QpnRhqtUVtEdoVJ53XVOsITnduHVV3NaYzWnHwumEVF2UTS5h0/C3P0MVwo6Gsulm+gt8f4AhPu28m0jF5oQmh3/AHwV79RjkBAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "cdkeks/@aws-cdk--aws-eks.KubectlProvider/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Outputs": {
+    "cdkeksawscdkawseksKubectlProviderframeworkonEventEE8F234FArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "ProviderframeworkonEvent83C1D0A7",
+          "Arn"
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "referencetocdkekscluster493FF92EArn": {
+      "Type": "String"
+    },
+    "referencetocdkeksclusterCreationRoleC3460E30Arn": {
+      "Type": "String"
+    },
+    "referencetocdkeksAssetParametersbafd50ae9f214e496ff8c72c6425f93dca3ccd590e20963706d5d610d9c75757S3BucketF96685D4Ref": {
+      "Type": "String"
+    },
+    "referencetocdkeksAssetParametersbafd50ae9f214e496ff8c72c6425f93dca3ccd590e20963706d5d610d9c75757S3VersionKey196E33B9Ref": {
+      "Type": "String"
+    },
+    "referencetocdkeksVPCPrivateSubnet1SubnetC9836E8DRef": {
+      "Type": "String"
+    },
+    "referencetocdkeksVPCPrivateSubnet2Subnet0656E4EBRef": {
+      "Type": "String"
+    },
+    "referencetocdkekscluster493FF92EClusterSecurityGroupId": {
+      "Type": "String"
+    },
+    "referencetocdkeksAssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3Bucket6647DF97Ref": {
+      "Type": "String"
+    },
+    "referencetocdkeksAssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKey7728A9FBRef": {
+      "Type": "String"
+    },
+    "referencetocdkeksAssetParameters092d7f04586cb1a946bd246f2ceac752f0a6c07032105e9a8ddcb3ba9fc7b621S3BucketFB548793Ref": {
+      "Type": "String"
+    },
+    "referencetocdkeksAssetParameters092d7f04586cb1a946bd246f2ceac752f0a6c07032105e9a8ddcb3ba9fc7b621S3VersionKeyCACCAA7BRef": {
+      "Type": "String"
+    },
+    "referencetocdkeksAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3Bucket26DFD404Ref": {
+      "Type": "String"
+    },
+    "referencetocdkeksAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKey40628C6CRef": {
+      "Type": "String"
+    }
+  }
+}
