@@ -27,7 +27,7 @@ setuptools.setup(
         "aws-cdk.aws_s3==1.107.0",
     ],
 
-    python_requires=">=3.8, <3.9",
+    python_requires="==3.8",
 
     classifiers=[
         "Development Status :: 4 - Beta",
