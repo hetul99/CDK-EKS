@@ -1,4 +1,4 @@
-attrs==19.3.0
+attrs==20.1.0
 aws-cdk.assets==1.56.0
 aws-cdk.aws-apigateway==1.56.0
 aws-cdk.aws-applicationautoscaling==1.56.0
